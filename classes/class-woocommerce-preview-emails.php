@@ -69,10 +69,7 @@ if ( ! class_exists( 'aks_WooCommercePreviewEmails' ) ):
 		/*Ajax Callback to email preview */
 		function wordimpress_preview_woo_emails()
 		{
-		
 			if (is_admin()) {
-		
-		
 		
 				$files   = scandir(get_stylesheet_directory() . '/woocommerce/emails');
 				$afiles  = scandir(WP_PLUGIN_DIR . '/woocommerce/templates/emails');
@@ -96,319 +93,317 @@ if ( ! class_exists( 'aks_WooCommercePreviewEmails' ) ):
 				$list    = array_diff($files, $exclude);
 		
 				if ($list) {
-					$woocommerce_orders = new WP_Query(array(
-						'post_type' => 'shop_order',
-						'posts_per_page' => -1,
-						'order' => 'ASC',
-						'post_status' => array('wc-completed', 'wc-processing')
-					));
-		
-					$order_drop_down_array = array();
-					$order_drop_down_array_type = array();
-					if ($woocommerce_orders->have_posts()) {
-						while ($woocommerce_orders->have_posts()) {
-							$woocommerce_orders->the_post();
-							$order_drop_down_array[get_the_ID()] = '#' . get_the_ID() . ' - ' . wc_get_order(get_the_ID())->get_order_number() . ' - ' . wc_get_order(get_the_ID())->get_status();
-							if (!in_array(wc_get_order(get_the_ID())->get_status(), $order_drop_down_array_type)) {
-								$order_drop_down_array_type[] = wc_get_order(get_the_ID())->get_status();
+							$woocommerce_orders = new WP_Query(array(
+								'post_type' => 'shop_order',
+								'posts_per_page' => -1,
+								'order' => 'ASC',
+								'post_status' => array('wc-completed', 'wc-processing')
+							));
+				
+							$order_drop_down_array = array();
+							$order_drop_down_array_type = array();
+							if ($woocommerce_orders->have_posts()) {
+								while ($woocommerce_orders->have_posts()) {
+									$woocommerce_orders->the_post();
+									$order_drop_down_array[get_the_ID()] = '#' . get_the_ID() . ' - ' . wc_get_order(get_the_ID())->get_order_number() . ' - ' . wc_get_order(get_the_ID())->get_status();
+									if (!in_array(wc_get_order(get_the_ID())->get_status(), $order_drop_down_array_type)) {
+										$order_drop_down_array_type[] = wc_get_order(get_the_ID())->get_status();
+									}
+								}
 							}
-						}
-					}
 		
 		
-					?>
-					<!-- If you delete the viewport meta tag, the ground will open and swallow you. -->
-					<meta name="viewport" content="width=device-width" />
+							?>
+							<!-- If you delete the viewport meta tag, the ground will open and swallow you. -->
+							<meta name="viewport" content="width=device-width" />
+				
+							<style>
+								@import url(http://fonts.googleapis.com/css?family=Lato:400,900);
+				
+								<?php
+									/*  This is normally not needed because 
+									*  WooCommerce inserts it into your templates
+									*  automatically. It's here so the styles
+									*  get applied to the preview correctly.
+									*/
+				
+									wc_get_template('emails/email-styles.php');
+				
+									/* Custom styles can be added here
+									* NOTE: Don't add inline comments in your styles, 
+									* they will break the template.
+									*/
+									$url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+									if (strpos($url, 'admin-ajax.php') !== false) {
+									?>#template_container {
+										max-width: 640px;
+									}
+				
+									#template-selector form,
+									#template-selector a.logo,
+									#template-selector .template-row,
+									#template-selector .order-row {
+										display: block;
+										margin: 0.75em 0;
+									}
+				
+									#template-selector {
+										background: #333;
+										color: white;
+										text-align: center;
+										padding: 0 2rem 1rem 2rem;
+										font-family: 'Lato', sans-serif;
+										font-weight: 400;
+										border: 4px solid #5D5D5D;
+										border-width: 0 0 4px 0;
+									}
+				
+									#template-selector a.logo {
+										display: inline-block;
+										position: relative;
+										top: 1.5em;
+										margin: 1em 0 2em;
+									}
+				
+									#template-selector a.logo img {
+										max-height: 5em;
+									}
+				
+									#template-selector a.logo p {
+										display: none;
+										float: left;
+										position: absolute;
+										width: 16em;
+										top: 4.5em;
+										padding: 2em;
+										left: -8em;
+										background: white;
+										opacity: 0;
+										border: 2px solid #777;
+										border-radius: 4px;
+										font-size: 0.9em;
+										line-height: 1.8;
+										transition: all 500ms ease-in-out;
+									}
+				
+									#template-selector a.logo:hover p {
+										display: block;
+										opacity: 1;
+									}
+				
+									#template-selector a.logo p:after,
+									#template-selector a.logo p:before {
+										bottom: 100%;
+										left: 50%;
+										border: solid transparent;
+										content: " ";
+										height: 0;
+										width: 0;
+										position: absolute;
+										pointer-events: none;
+									}
+				
+									#template-selector a.logo p:after {
+										border-color: rgba(255, 255, 255, 0);
+										border-bottom-color: #ffffff;
+										border-width: 8px;
+										margin-left: -8px;
+									}
+				
+									#template-selector a.logo p:before {
+										border-color: rgba(119, 119, 119, 0);
+										border-bottom-color: #777;
+										border-width: 9px;
+										margin-left: -9px;
+									}
+				
+									#template-selector a.logo:hover p {
+										display: block;
+									}
+				
+									#template-selector span {
+										font-weight: 900;
+										display: inline-block;
+										margin: 0 1rem;
+									}
+				
+									#template-selector select,
+									#template-selector input {
+										background: #e3e3e3;
+										font-family: 'Lato', sans-serif;
+										color: #333;
+										padding: 0.5rem 1rem;
+										border: 0px;
+									}
+				
+									#template-selector #order,
+									#template-selector .choose-order {
+										display: none;
+									}
+				
+									@media screen and (min-width: 1100px) {
+				
+										#template-selector .template-row,
+										#template-selector .order-row {
+											display: inline-block;
+										}
+				
+										#template-selector form {
+											display: inline-block;
+											line-height: 3;
+										}
+				
+										#template-selector a.logo p {
+											width: 16em;
+											top: 4.5em;
+											left: 0.25em;
+										}
+				
+										#template-selector a.logo p:after,
+										#template-selector a.logo p:before {
+											left: 10%;
+										}
+									}
+				
+									<?php } ?>
+							</style>
+				
+							<div id="template-selector">
+								<form method="get" action="<?php echo site_url(); ?>/wp-admin/admin-ajax.php">
+									<div class="template-row">
+										<input id="setorder" type="hidden" name="order" value="">
+										<input type="hidden" name="action" value="previewemail">
+										<span class="choose-email">Choose your email template: </span>
+										<select name="file" id="email-select">
+											<?php
+											foreach ($list as $item) { ?>
+												<option value="<?php echo $item; ?>"><?php echo str_replace('.php', '', $item); ?></option>
+											<?php } ?>
+										</select>
+									</div>
+									<div class="order-row">
+										<span class="choose-order-type">Status: </span>
+										<select id="order-type" onchange="process1(this)" name="order-type">
+											<?php foreach ($order_drop_down_array_type as $order_statuses) { ?>
+												<option value="<?php echo $order_statuses; ?>" <?php selected(((isset($_GET['order-type'])) ? $_GET['order-type'] : key($order_drop_down_array_type)), $order_statuses); ?>><?php echo $order_statuses; ?></option>
+											<?php } ?>
+										</select>
+									</div>
+									<div class="order-row">
+										<span class="choose-order">order: </span>
+										<select id="order" onchange="process1(this)" name="order">
+											<?php foreach ($order_drop_down_array as $order_id => $order_name) { ?>
+												<option value="<?php echo $order_id; ?>" <?php selected(((isset($_GET['order'])) ? $_GET['order'] : key($order_drop_down_array)), $order_id); ?>><?php echo $order_name; ?></option>
+											<?php } ?>
+										</select>
+									</div>
+									<input type="submit" value="Go">
+								</form>
+							</div>
+							<?php
 		
-					<style>
-						@import url(http://fonts.googleapis.com/css?family=Lato:400,900);
+							global $order, $billing_email;
+				
+							reset($order_drop_down_array);
+				
+							$order_number = isset($_GET['order']) ? $_GET['order'] : key($order_drop_down_array);
+				
+							$order = new WC_Order($order_number);
+				
+							$emails = new WC_Emails();
+				
+							$user_id = (int) $order->post->post_author;
+				
+							$user_details = get_user_by('id', $user_id);
 		
-						<?php
-							/*  This is normally not needed because 
-							*  WooCommerce inserts it into your templates
-							*  automatically. It's here so the styles
-							*  get applied to the preview correctly.
+							// Load the email header on files that don't include it
+							// if (in_array($_GET['file'], array('email-customer-details.php', 'email-order-details.php'))) {
+							// 	wc_get_template('emails/email-header.php', array(
+							// 		'order' => $order,
+							// 		'email_heading' => $email_heading
+							// 	));
+							// }
+		
+							do_action('woocommerce_email_before_order_table', $order, false, false);
+			
+							wc_get_template('emails/' . $_GET['file'], array(
+								'order' => $order,
+								'email_heading' => '',
+								'sent_to_admin' => false,
+								'plain_text' => false,
+								'email' => $user_details->user_email,
+								'user_login' => $user_details->user_login,
+								'blogname' => get_bloginfo('name'),
+								'customer_note' => $order->customer_note,
+								'partial_refund' => ''
+							));
+		
+		
+							/* This makes sure the JS is
+							* only loaded on the preview page
+							* don't remove it.
 							*/
-		
-							wc_get_template('emails/email-styles.php');
-		
-							/* Custom styles can be added here
-							* NOTE: Don't add inline comments in your styles, 
-							* they will break the template.
-							*/
-							$url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+							// Load colours
+							$base = get_option('woocommerce_email_base_color');
+				
+							$base_lighter_40 = wc_hex_lighter($base, 40);
+			
+							// For gmail compatibility, including CSS styles in head/body are stripped out therefore styles need to be inline. These variables contain rules which are added to the template inline.
+							$template_footer = "border-top:0;-webkit-border-radius:6px;";
+			
+							$credit = "border:0;color: $base_lighter_40;font-family: Arial;	font-size:12px;line-height:125%;	text-align:center;	";
+							$url = "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . '://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 							if (strpos($url, 'admin-ajax.php') !== false) {
-							?>#template_container {
-								max-width: 640px;
-							}
+										?>
+										<!-- We need jQuery for some of the preview functionality -->
+										<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+										<script language="javascript">
+											//This sets the order value for the query string
+											function process1(showed) {
+												document.getElementById("setorder").value = showed.value;
+												jQuery("#ordernum").attr("value", getQueryVariable("order"));
+											}
+											// This shows the order field
+											// conditionally based on the select field
+											jQuery(document).ready(function($) {
+												$("#email-select").change(function() {
+													$("#email-select option:selected").each(function() {
+														// if(($(this).attr("value")=="customer-completed-order.php") || ($(this).attr("value")=="admin-cancelled-order.php") || ($(this).attr("value")=="admin-new-order.php") ||($(this).attr("value")=="customer-completed-order") || ($(this).attr("value")=="customer-invoice.php")){
+														$("#order").show()
+														$(".choose-order").show();
+														// } else {
+														// 	$("#order").hide()
+														// 	$(".choose-order").hide();
+														// }
+						
+													});
+												}).change();
+											});
+						
+											//This gets the info from the query string
+											function getUrlVars() {
+												var vars = [],
+													hash;
+												var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+												for (var i = 0; i < hashes.length; i++) {
+													hash = hashes[i].split(' = ');
+													vars.push(hash[0]);
+													vars[hash[0]] = hash[1];
+												}
+												return vars;
+						
+											}
+											var order = getUrlVars()["order"];
+											var file = getUrlVars()["file"];
+						
+											// This populates the fields 
+											// from the data in the query string
+											jQuery('form input#order').val(decodeURI(order));
+											jQuery('select#email-select').val(decodeURI(file));
+										</script>
+							<?php }
 		
-							#template-selector form,
-							#template-selector a.logo,
-							#template-selector .template-row,
-							#template-selector .order-row {
-								display: block;
-								margin: 0.75em 0;
-							}
-		
-							#template-selector {
-								background: #333;
-								color: white;
-								text-align: center;
-								padding: 0 2rem 1rem 2rem;
-								font-family: 'Lato', sans-serif;
-								font-weight: 400;
-								border: 4px solid #5D5D5D;
-								border-width: 0 0 4px 0;
-							}
-		
-							#template-selector a.logo {
-								display: inline-block;
-								position: relative;
-								top: 1.5em;
-								margin: 1em 0 2em;
-							}
-		
-							#template-selector a.logo img {
-								max-height: 5em;
-							}
-		
-							#template-selector a.logo p {
-								display: none;
-								float: left;
-								position: absolute;
-								width: 16em;
-								top: 4.5em;
-								padding: 2em;
-								left: -8em;
-								background: white;
-								opacity: 0;
-								border: 2px solid #777;
-								border-radius: 4px;
-								font-size: 0.9em;
-								line-height: 1.8;
-								transition: all 500ms ease-in-out;
-							}
-		
-							#template-selector a.logo:hover p {
-								display: block;
-								opacity: 1;
-							}
-		
-							#template-selector a.logo p:after,
-							#template-selector a.logo p:before {
-								bottom: 100%;
-								left: 50%;
-								border: solid transparent;
-								content: " ";
-								height: 0;
-								width: 0;
-								position: absolute;
-								pointer-events: none;
-							}
-		
-							#template-selector a.logo p:after {
-								border-color: rgba(255, 255, 255, 0);
-								border-bottom-color: #ffffff;
-								border-width: 8px;
-								margin-left: -8px;
-							}
-		
-							#template-selector a.logo p:before {
-								border-color: rgba(119, 119, 119, 0);
-								border-bottom-color: #777;
-								border-width: 9px;
-								margin-left: -9px;
-							}
-		
-							#template-selector a.logo:hover p {
-								display: block;
-							}
-		
-							#template-selector span {
-								font-weight: 900;
-								display: inline-block;
-								margin: 0 1rem;
-							}
-		
-							#template-selector select,
-							#template-selector input {
-								background: #e3e3e3;
-								font-family: 'Lato', sans-serif;
-								color: #333;
-								padding: 0.5rem 1rem;
-								border: 0px;
-							}
-		
-							#template-selector #order,
-							#template-selector .choose-order {
-								display: none;
-							}
-		
-							@media screen and (min-width: 1100px) {
-		
-								#template-selector .template-row,
-								#template-selector .order-row {
-									display: inline-block;
-								}
-		
-								#template-selector form {
-									display: inline-block;
-									line-height: 3;
-								}
-		
-								#template-selector a.logo p {
-									width: 16em;
-									top: 4.5em;
-									left: 0.25em;
-								}
-		
-								#template-selector a.logo p:after,
-								#template-selector a.logo p:before {
-									left: 10%;
-								}
-							}
-		
-							<?php } ?>
-					</style>
-		
-					<div id="template-selector">
-						<form method="get" action="<?php echo site_url(); ?>/wp-admin/admin-ajax.php">
-							<div class="template-row">
-								<input id="setorder" type="hidden" name="order" value="">
-								<input type="hidden" name="action" value="previewemail">
-								<span class="choose-email">Choose your email template: </span>
-								<select name="file" id="email-select">
-									<?php
-									foreach ($list as $item) { ?>
-										<option value="<?php echo $item; ?>"><?php echo str_replace('.php', '', $item); ?></option>
-									<?php } ?>
-								</select>
-							</div>
-							<div class="order-row">
-								<span class="choose-order-type">Status: </span>
-								<select id="order-type" onchange="process1(this)" name="order-type">
-									<?php foreach ($order_drop_down_array_type as $order_statuses) { ?>
-										<option value="<?php echo $order_statuses; ?>" <?php selected(((isset($_GET['order-type'])) ? $_GET['order-type'] : key($order_drop_down_array_type)), $order_statuses); ?>><?php echo $order_statuses; ?></option>
-									<?php } ?>
-								</select>
-							</div>
-							<div class="order-row">
-								<span class="choose-order">order: </span>
-								<select id="order" onchange="process1(this)" name="order">
-									<?php foreach ($order_drop_down_array as $order_id => $order_name) { ?>
-										<option value="<?php echo $order_id; ?>" <?php selected(((isset($_GET['order'])) ? $_GET['order'] : key($order_drop_down_array)), $order_id); ?>><?php echo $order_name; ?></option>
-									<?php } ?>
-								</select>
-							</div>
-							<input type="submit" value="Go">
-						</form>
-					</div>
-					<?php
-		
-					global $order, $billing_email;
-		
-					reset($order_drop_down_array);
-		
-					$order_number = isset($_GET['order']) ? $_GET['order'] : key($order_drop_down_array);
-		
-					$order = new WC_Order($order_number);
-		
-					$emails = new WC_Emails();
-		
-					$email_heading = return_wooc_email_heading($emails->emails, $_GET['file'], $order_number);
-		
-					$user_id = (int) $order->post->post_author;
-		
-					$user_details = get_user_by('id', $user_id);
-		
-					// Load the email header on files that don't include it
-					if (in_array($_GET['file'], array('email-customer-details.php', 'email-order-details.php'))) {
-						wc_get_template('emails/email-header.php', array(
-							'order' => $order,
-							'email_heading' => $email_heading
-						));
-					}
-		
-					do_action('woocommerce_email_before_order_table', $order, false, false);
-		
-					wc_get_template('emails/' . $_GET['file'], array(
-						'order' => $order,
-						'email_heading' => $email_heading,
-						'sent_to_admin' => false,
-						'plain_text' => false,
-						'email' => $user_details->user_email,
-						'user_login' => $user_details->user_login,
-						'blogname' => get_bloginfo('name'),
-						'customer_note' => $order->customer_note,
-						'partial_refund' => ''
-					));
-		
-		
-					/* This makes sure the JS is
-					* only loaded on the preview page
-					* don't remove it.
-					*/
-					// Load colours
-					$base = get_option('woocommerce_email_base_color');
-		
-					$base_lighter_40 = wc_hex_lighter($base, 40);
-		
-					// For gmail compatibility, including CSS styles in head/body are stripped out therefore styles need to be inline. These variables contain rules which are added to the template inline.
-					$template_footer = "border-top:0;-webkit-border-radius:6px;";
-		
-					$credit = "border:0;color: $base_lighter_40;font-family: Arial;	font-size:12px;line-height:125%;	text-align:center;	";
-					$url = "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . '://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-					if (strpos($url, 'admin-ajax.php') !== false) {
-					?>
-						<!-- We need jQuery for some of the preview functionality -->
-						<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-						<script language="javascript">
-							//This sets the order value for the query string
-							function process1(showed) {
-								document.getElementById("setorder").value = showed.value;
-								jQuery("#ordernum").attr("value", getQueryVariable("order"));
-							}
-							// This shows the order field
-							// conditionally based on the select field
-							jQuery(document).ready(function($) {
-								$("#email-select").change(function() {
-									$("#email-select option:selected").each(function() {
-										// if(($(this).attr("value")=="customer-completed-order.php") || ($(this).attr("value")=="admin-cancelled-order.php") || ($(this).attr("value")=="admin-new-order.php") ||($(this).attr("value")=="customer-completed-order") || ($(this).attr("value")=="customer-invoice.php")){
-										$("#order").show()
-										$(".choose-order").show();
-										// } else {
-										// 	$("#order").hide()
-										// 	$(".choose-order").hide();
-										// }
-		
-									});
-								}).change();
-							});
-		
-							//This gets the info from the query string
-							function getUrlVars() {
-								var vars = [],
-									hash;
-								var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-								for (var i = 0; i < hashes.length; i++) {
-									hash = hashes[i].split(' = ');
-									vars.push(hash[0]);
-									vars[hash[0]] = hash[1];
-								}
-								return vars;
-		
-							}
-							var order = getUrlVars()["order"];
-							var file = getUrlVars()["file"];
-		
-							// This populates the fields 
-							// from the data in the query string
-							jQuery('form input#order').val(decodeURI(order));
-							jQuery('select#email-select').val(decodeURI(file));
-						</script>
-			<?php }
-		
-					// Everything below here will be output into the email directly
+						// Everything below here will be output into the email directly
 		
 				}
 			}
@@ -685,30 +680,6 @@ if ( ! class_exists( 'aks_WooCommercePreviewEmails' ) ):
 
 			return $recipient;
 		}
-
-
-		/*
-		*	Locate the template, and extract the heading
-		*	@returns appropriate heading for the given template
-		*/
-
-		function return_wooc_email_heading($emails_array, $template_name, $order_number)
-		{
-			// Confirm that the variables are set
-			if (!$emails_array || !$template_name) {
-				return;
-			}
-
-			$template_name = str_replace('.php', '', str_replace('-', '_', $template_name));
-
-			foreach ($emails_array as $email) {
-				if ($email->id == $template_name) {
-					return str_replace('{order_number}', '#' . $order_number, $email->settings['heading']);
-				}
-			}
-			return;
-		}
-
 	}
 
 	add_action( 'plugins_loaded', array( 'aks_WooCommercePreviewEmails', 'get_instance' ) );
