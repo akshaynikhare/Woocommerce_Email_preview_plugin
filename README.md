@@ -1,2 +1,3 @@
 # Woocommerce_Email_priview_plugin
- Woocommerce Email priview plugin
+WooCommerce plugin lets you Preview Emails, without send.
+
